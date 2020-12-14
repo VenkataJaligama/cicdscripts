@@ -1,12 +1,19 @@
 pipeline {
+
     agent any
 
     stages {
+	
+	     
         stage('Build') {
             steps {
                 echo 'Building..'
             }
         }
+		
+		stage('Download Artifactories'){
+		   echo ' checkout ear and manifest files'
+		}
         stage('Test') {
             steps {
                 echo 'Testing..'
