@@ -4,12 +4,6 @@ node('pipeline') {
     
     stage('Get Sources') {        
         echo "## TIBCO TCI CICD"
-       
-        dir('src') {
-
-        }
-       
-        
     }
 
     stage('Build') {
