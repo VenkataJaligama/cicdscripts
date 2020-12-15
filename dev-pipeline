@@ -18,8 +18,6 @@ pipeline {
 	
         stage('Build') {
             steps {
-			    bat('tibcli -h')
-				
                 echo 'Building..'
             }
         }
@@ -32,9 +30,13 @@ pipeline {
 				  echo '**************** checkout properties from git ****************'
 				  git url: propGitUrl, branch: propGitBranch, credentialsId: 'git'
 
+				  bat('tibcli -h')
+ 
 				    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'TIBCO_TCI_CREDENTIALS', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']])
                         {
-                             echo "$USERNAME"
+                            // echo "$USERNAME"
+							
+							 bat('tibcli.exe login -u $USERNAME -p $PASSWORD')
                         }
 				}
 		}
