@@ -2,7 +2,7 @@ pipeline {
 
     agent any
 	
-	applicationartifactGitUrl='https://github.com/VenkataJaligama/Test.git'
+	//applicationartifactGitUrl='https://github.com/VenkataJaligama/Test.git'
    // pipelinebuildbranch='master'
 	
     stages {
