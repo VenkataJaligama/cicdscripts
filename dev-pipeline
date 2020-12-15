@@ -26,13 +26,14 @@ pipeline {
 		
 		stage('artifacts'){
 		   steps {
+		          bat('tibcli -h')
 				  echo '**************** checkout ear ***************************'
 				  git url: earGitUrl, branch: earGitBranch, credentialsId: 'git'
 				  echo '**************** Ear successfully downloaded ****************'
 				  echo '**************** checkout properties from git ****************'
 				  git url: propGitUrl, branch: propGitBranch, credentialsId: 'git'
 
-				  bat('tibcli -h')
+				  
  
 				    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'TIBCO_TCI_CREDENTIALS', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']])
                         {
