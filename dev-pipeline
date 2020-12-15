@@ -2,8 +2,14 @@ pipeline {
 
     agent any
 	
-	//applicationartifactGitUrl='https://github.com/VenkataJaligama/Test.git'
-   // pipelinebuildbranch='master'
+	 environment {
+	    earGitUrl= "${APP_EAR_GIT_URL}"
+		earGitBranch= "master"
+   
+        propGitUrl= "${APP_PROP_GIT_URL}"
+		propGitBranch= "master"
+		manifestName = "${ENV_SPECIFIC_MANIFEST_JSON}"
+	}
 	
     stages {
 	
@@ -13,10 +19,13 @@ pipeline {
             }
         }
 		
-		stage('artifact'){
+		stage('artifacts'){
 		   steps {
-				  echo ' checkout ear and manifest files'
-				  git url: "${APP_EAR_GIT_URL}", branch: "master", credentialsId: 'git'
+				  echo ' checkout ear'
+				  git url: earGitUrl, branch: earGitBranch, credentialsId: 'git'
+				  echo 'Ear successfully downloaded'
+				  echo 'checkout properties from git'
+				  git url: propGitUrl, branch: propGitBranch, credentialsId: 'git'
 				}
 		}
         stage('Test') {
