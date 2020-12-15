@@ -1,18 +1,22 @@
 pipeline {
 
     agent any
-
+	
+	applicationartifactGitUrl='https://github.com/VenkataJaligama/Test.git'
+    pipelinebuildbranch='master'
+	
     stages {
 	
         stage('Build') {
             steps {
-                echo 'Building..'
+               // echo 'Building..'
             }
         }
 		
-		stage('CheckOut Ear'){
+		stage('artifact'){
 		   steps {
-				echo ' checkout ear and manifest files'
+				  echo ' checkout ear and manifest files'
+				  git url: applicationartifactGitUrl, branch: pipelinebuildbranch, credentialsId: 'git'
 				}
 		}
         stage('Test') {
