@@ -18,7 +18,7 @@ pipeline {
 	
         stage('Build') {
             steps {
-			    tibcli -h
+			    cmd_exec('tibcli -h')
 				
                 echo 'Building..'
             }
