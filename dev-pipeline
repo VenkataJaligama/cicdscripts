@@ -16,7 +16,7 @@ pipeline {
 		stage('artifact'){
 		   steps {
 				  echo ' checkout ear and manifest files'
-				  git url: applicationartifactGitUrl, branch: pipelinebuildbranch, credentialsId: 'git'
+				  git url: ${APP_EAR_GIT_URL}, branch: pipelinebuildbranch, credentialsId: 'git'
 				}
 		}
         stage('Test') {
