@@ -8,7 +8,10 @@ pipeline {
    
         propGitUrl= "${APP_PROP_GIT_URL}"
 		propGitBranch= "master"
-		manifestName = "${ENV_SPECIFIC_MANIFEST_JSON}"
+		
+		appPropName="${APP_PROP_NAME}"
+		
+		manifestName = "manifest_dev.json"
 	}
 	
     stages {
@@ -21,10 +24,10 @@ pipeline {
 		
 		stage('artifacts'){
 		   steps {
-				  echo ' checkout ear'
+				  echo '**************** checkout ear ***************************'
 				  git url: earGitUrl, branch: earGitBranch, credentialsId: 'git'
-				  echo 'Ear successfully downloaded'
-				  echo 'checkout properties from git'
+				  echo '**************** Ear successfully downloaded ****************'
+				  echo '**************** checkout properties from git ****************'
 				  git url: propGitUrl, branch: propGitBranch, credentialsId: 'git'
 				}
 		}
