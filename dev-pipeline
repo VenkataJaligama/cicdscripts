@@ -3,7 +3,7 @@ pipeline {
     agent any
 	
 	applicationartifactGitUrl='https://github.com/VenkataJaligama/Test.git'
-    pipelinebuildbranch='master'
+   // pipelinebuildbranch='master'
 	
     stages {
 	
@@ -16,7 +16,7 @@ pipeline {
 		stage('artifact'){
 		   steps {
 				  echo ' checkout ear and manifest files'
-				  git url: ${APP_EAR_GIT_URL}, branch: pipelinebuildbranch, credentialsId: 'git'
+				  git url: ${APP_EAR_GIT_URL}, branch: 'master', credentialsId: 'git'
 				}
 		}
         stage('Test') {
