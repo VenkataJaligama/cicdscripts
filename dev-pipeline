@@ -42,7 +42,14 @@ pipeline {
 				  echo '## Ear downloaded ##'
 				  
 				  echo '## checkout global variables ##'
-				  git url: gvConfigUrl, branch: gitBranch, credentialsId: 'git'				  
+				  git url: gvConfigUrl, branch: gitBranch, credentialsId: 'git'		
+
+                  bat('mkdir ' + appName)	
+
+                  echo 'copy ' + './'+ buildAppName+ '/'+earName + ' ./'+appName+'/'+earName
+				  
+                  bat('copy ' + './'+ buildAppName+ '/'+earName + ' ./'+appName+'/'+earName)
+				  
 				}
 		}
         stage('Test') {
