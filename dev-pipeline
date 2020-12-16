@@ -24,6 +24,7 @@ pipeline {
 		
         buildParams = "build_params.txt"
 		
+		appScaleCount= "${APP_SCALE_COUNT}"
 	}
 	
     stages {
@@ -107,7 +108,7 @@ pipeline {
 								 //bat('cd '+ appName)
 								 bat('tibcli app list')
 								 
-								 bat('tibcli app push ' + appName)
+								 bat('tibcli app push ' + appScaleCount + ' ' appName)
 								 
 								 bat('tibcli.exe logout')
 					}
