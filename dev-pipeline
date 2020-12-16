@@ -37,7 +37,8 @@ pipeline {
 		   
 				  echo '## checkout ear ##'
 				  
-				  bat('rmdir /Q /S cicdbuild')
+				  if(fileExists("cicdbuild"))
+					bat('rmdir /Q /S cicdbuild')
 				  
 				  bat('mkdir cicdbuild')
 				  
@@ -48,9 +49,12 @@ pipeline {
 				  echo '## Ear downloaded ##'
 				  
 				  echo '## checkout global variables ##'
+				 
+				  if(fileExists("cicdgvconfig"))				 
+				     bat('rmdir /Q /S cicdgvconfig')
 				  
-				  bat('rmdir /Q /S cicdgvconfig')
 				  bat('mkdir cicdgvconfig')
+				  
 				  dir('cicdgvconfig'){ 
 				    git url: gvConfigUrl, branch: gitBranch, credentialsId: 'git'	
 				  }					
