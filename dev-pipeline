@@ -64,7 +64,9 @@ pipeline {
 				  
 				  script {
 						Boolean bool = fileExists appName
-						bat('rmdir /Q /S '+ appName)
+						if(bool){
+						   bat('rmdir /Q /S '+ appName)
+						}
 				  }
 
                   bat('mkdir ' + appName)	
