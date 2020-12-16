@@ -22,9 +22,9 @@ pipeline {
 
         buildParams = "build_params.txt"
 		
-		earGitUrl= ${buildGitUrl} + "/" + ${buildAppName} +"/"+ ${earName}
+		earGitUrl= "${buildGitUrl}" + "/" + "${buildAppName}" +"/"+ "${earName}"
 		
-		gvConfig = ${gvConfigUrl}+ "/" + ${gvConfigAppName}
+		gvConfig = "${gvConfigUrl}"+ "/" + "${gvConfigAppName}"
 	}
 	
     stages {
