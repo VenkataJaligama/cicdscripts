@@ -41,10 +41,6 @@ pipeline {
 						bat('rmdir /Q /S cicdbuild')
 				   }
 				  
-				 // if(fileExists('cicdbuild')){
-				//	bat('rmdir /Q /S cicdbuild')
-				//  }
-				  
 				  bat('mkdir cicdbuild')
 				  
                   dir('cicdbuild'){
@@ -55,9 +51,10 @@ pipeline {
 				  
 				  echo '## checkout global variables ##'
 				 
-				//  if(fileExists('cicdgvconfig')){			 
-				 //    bat('rmdir /Q /S cicdgvconfig')
-				//	 }
+				  script {
+						Boolean bool = fileExists 'cicdgvconfig'
+						bat('rmdir /Q /S cicdgvconfig')
+				  }
 				  
 				  bat('mkdir cicdgvconfig')
 				  
@@ -65,7 +62,10 @@ pipeline {
 				    git url: gvConfigUrl, branch: gitBranch, credentialsId: 'git'	
 				  }					
 				  
-				  bat('rmdir /Q /S ' + appName)
+				  script {
+						Boolean bool = fileExists appName
+						bat('rmdir /Q /S '+ appName)
+				  }
 
                   bat('mkdir ' + appName)	
 
