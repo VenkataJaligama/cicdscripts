@@ -37,8 +37,9 @@ pipeline {
 		   
 				  echo '## checkout ear ##'
 				  
-				  if(fileExists("cicdbuild"))
+				  if(fileExists('cicdbuild')){
 					bat('rmdir /Q /S cicdbuild')
+				  }
 				  
 				  bat('mkdir cicdbuild')
 				  
@@ -50,8 +51,9 @@ pipeline {
 				  
 				  echo '## checkout global variables ##'
 				 
-				  if(fileExists("cicdgvconfig"))				 
+				  if(fileExists('cicdgvconfig')){			 
 				     bat('rmdir /Q /S cicdgvconfig')
+					 }
 				  
 				  bat('mkdir cicdgvconfig')
 				  
