@@ -28,6 +28,7 @@ pipeline {
 		   steps {
 		          bat('tibcli -h')
 				  echo '**************** checkout ear ***************************'
+				  bat('tibcli -h')
 				  git url: earGitUrl, branch: earGitBranch, credentialsId: 'git'
 				  echo '**************** Ear successfully downloaded ****************'
 				  echo '**************** checkout properties from git ****************'
@@ -45,7 +46,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing..'
-				bat('tibcli -h')
+				//bat('tibcli -h')
             }
         }
         stage('Deploy') {
