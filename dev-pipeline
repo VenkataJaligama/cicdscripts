@@ -37,20 +37,29 @@ pipeline {
 		   
 				  echo '## checkout ear ##'
 				  
-				   bat('mkdir mybuild')
-                  dir('mybuild'){
+				  bat('rmdir /Q /S cicdbuild')
+				  
+				  bat('mkdir cicdbuild')
+				  
+                  dir('cicdbuild'){
 					git url: buildGitUrl, branch: gitBranch, credentialsId: 'git'
                   }
+				  
 				  echo '## Ear downloaded ##'
 				  
 				  echo '## checkout global variables ##'
-				  git url: gvConfigUrl, branch: gitBranch, credentialsId: 'git'		
+				  
+				  bat('rmdir /Q /S cicdgvconfig')
+				  bat('mkdir cicdgvconfig')
+				  dir('cicdgvconfig'){ 
+				    git url: gvConfigUrl, branch: gitBranch, credentialsId: 'git'	
+				  }					
 				  
 				  bat('rmdir /Q /S ' + appName)
 
                   bat('mkdir ' + appName)	
 
-                  echo 'copy ' + './'+ buildAppName+ '/'+earName + ' ./'+appName+'/'+earName
+                  echo 'copy ' + './cicdbuild'+ buildAppName+ '/'+earName + ' ./'+appName+'/'+earName
 				  
                 //  bat('copy ' + './'+ buildAppName+ '/'+earName + ' ./'+appName+'/'+earName)
 				  
