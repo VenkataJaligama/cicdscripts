@@ -18,8 +18,10 @@ pipeline {
 		
 		gitBranch= "master"
       
-		manifestName = "manifest_dev.json"
-
+		devManifestName = "manifest_dev.json"
+		
+        manifestName = "manifest.json"
+		
         buildParams = "build_params.txt"
 		
 	}
@@ -76,10 +78,13 @@ pipeline {
 
                   bat('mkdir ' + appName)	
 
-                  echo 'copy ' + 'cicdbuild\\'+ buildAppName+ '\\'+earName + "  " + appName+'\\'+earName
+                  echo  'coping ear file command '+  'copy ' + 'cicdbuild\\'+ buildAppName+ '\\'+earName + "  " + appName+'\\'+earName
 				  
                   bat('copy ' + 'cicdbuild\\'+ buildAppName+ '\\'+earName + '  '+appName+'\\'+earName)
 				  
+				  echo ' coping manifest file '
+				  
+				  bat('copy ' + 'cicdgvconfig\\'+ gvConfigAppName+ '\\'+devManifestName + '  '+appName+'\\'+manifestName)
 				}
 		}
         stage('Test') {
