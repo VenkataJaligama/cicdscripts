@@ -36,9 +36,11 @@ pipeline {
 		   steps {
 		   
 				  echo '## checkout ear ##'
-
-				  git url: buildGitUrl, branch: gitBranch, credentialsId: 'git'
-
+				  
+				   bat('mkdir mybuild')
+                  dir('mybuild'){
+					git url: buildGitUrl, branch: gitBranch, credentialsId: 'git'
+                  }
 				  echo '## Ear downloaded ##'
 				  
 				  echo '## checkout global variables ##'
