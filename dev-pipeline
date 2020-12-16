@@ -107,7 +107,7 @@ pipeline {
 								 //bat('cd '+ appName)
 								 bat('tibcli app list')
 								 
-								 bat('tibcli app push')
+								 bat('tibcli app push ' + appName)
 								 
 								 bat('tibcli.exe logout')
 					}
