@@ -101,7 +101,7 @@ pipeline {
 							
 							 bat('tibcli.exe login -u '+ username+ ' -p ' + password)
 							 
-							 echo 'Applications currently deployed in TIBCO TCI Domain')
+							 echo 'Applications currently deployed in TIBCO TCI Domain'
 							 
 							 bat('cd '+ appName)
 							 
