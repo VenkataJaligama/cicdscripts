@@ -22,9 +22,6 @@ pipeline {
 
         buildParams = "build_params.txt"
 		
-		earGitUrl= "${buildGitUrl}" + "/" + "${buildAppName}" +"/"+ "${earName}"
-		
-		gvConfig = "${gvConfigUrl}"+ "/" + "${gvConfigAppName}"
 	}
 	
     stages {
@@ -40,12 +37,12 @@ pipeline {
 		   
 				  echo '## checkout ear ##'
 
-				  git url: earGitUrl, branch: gitBranch, credentialsId: 'git'
+				  git url: buildGitUrl, branch: gitBranch, credentialsId: 'git'
 
 				  echo '## Ear downloaded ##'
 				  
 				  echo '## checkout global variables ##'
-				  git url: gvConfig, branch: gitBranch, credentialsId: 'git'				  
+				  git url: gvConfigUrl, branch: gitBranch, credentialsId: 'git'				  
 				}
 		}
         stage('Test') {
