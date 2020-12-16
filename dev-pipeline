@@ -25,7 +25,7 @@ pipeline {
         buildParams = "build_params.txt"
 		
 		appScaleCount= "${APP_SCALE_COUNT}"
-		echo 'APP_SCALE_COUNT : ' +  appScaleCount
+		echo 'APP_SCALE_COUNT = ${appScaleCount}'
 	}
 	
     stages {
@@ -103,6 +103,10 @@ pipeline {
 								 echo "USERNAME" + username + "PASSWORD" + password
 								
 								 bat('tibcli.exe login -u '+ username+ ' -p ' + password)
+								 
+								 echo ' Logged in to org' 
+								 
+								 bat('tibcli org current')
 								 
 								 echo 'Applications currently deployed in TIBCO TCI Domain'
 								 
