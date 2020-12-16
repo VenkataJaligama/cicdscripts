@@ -107,6 +107,8 @@ pipeline {
 							 
 							 bat('tibcli app list')
 							 
+							 bat('tibcli app push')
+							 
 							 bat('tibcli.exe logout')
                 }
             }
