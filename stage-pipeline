@@ -87,7 +87,7 @@ pipeline {
 								 
 								 bat('tibcli app configure ' + appName +'.staging' + ' -p '+ stageAppProp + ' -f')
 								 
-								 bat('tibcli app replace ' + appName +'.staging' +  ' ' +appName + ' -f  --impose')
+								 bat('tibcli app replace ' + appName +'.staging' +  ' ' +appName + ' --impose')
 								 
 								 bat('tibcli.exe logout')
 					}
