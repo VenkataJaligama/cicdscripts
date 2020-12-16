@@ -37,12 +37,14 @@ pipeline {
 				  echo '**************** checkout properties from git ****************'
 				  git url: propGitUrl, branch: propGitBranch, credentialsId: 'git'
                   
+				  
+				  
 
-				  withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'TIBCO_TCI_CREDENTIALS', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']])
+				  withCredentials([usernamePassword(credentialsId: 'tibcotci',usernameVariable: 'username',passwordVariable: 'password')])
                         {
-                            // echo "$USERNAME"
+                             echo "USERNAME" + username + "PASSWORD" + password
 							
-							 bat('tibcli.exe login -u "$USERNAME" -p "$PASSWORD"')
+							// bat('tibcli.exe login -u "$USERNAME" -p "$PASSWORD"')
                         }
 				}
 		}
