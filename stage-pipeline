@@ -59,7 +59,7 @@ pipeline {
 
 				  echo ' coping manifest file '
 				  
-				  bat('copy ' + 'cicdgvconfig\\'+ gvConfigAppName+ '\\'+devManifestName + '  '+appName+'\\'+stageAppProp)
+				  //bat('copy ' + 'cicdgvconfig\\'+ gvConfigAppName+ '\\'+devManifestName + '  '+appName+'\\'+stageAppProp)
 				}
 		}
         stage('Test') {
