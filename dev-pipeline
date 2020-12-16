@@ -44,7 +44,7 @@ pipeline {
                         {
                              echo "USERNAME" + username + "PASSWORD" + password
 							
-							// bat('tibcli.exe login -u "$USERNAME" -p "$PASSWORD"')
+							 bat('tibcli.exe login -u '+ username+ ' -p ' + password)
                         }
 				}
 		}
