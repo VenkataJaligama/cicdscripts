@@ -81,7 +81,7 @@ pipeline {
 								 
 								 bat('tibcli org current')
 								 
-								 bat('tibcli app delete '+ appName +'.staging --impose')
+								 bat('tibcli app delete '+ appName +'.staging --force')
 								
 								 bat('tibcli app copy '+ devAppName+ '  '+ appName	+'.staging  --impose')	
 								 
