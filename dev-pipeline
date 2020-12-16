@@ -32,7 +32,7 @@ pipeline {
 				  echo '**************** Ear successfully downloaded ****************'
 				  echo '**************** checkout properties from git ****************'
 				  git url: propGitUrl, branch: propGitBranch, credentialsId: 'git'
-                  bat('tibcli -h')
+                  
 
 				  withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'TIBCO_TCI_CREDENTIALS', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']])
                         {
@@ -40,6 +40,9 @@ pipeline {
 							
 							// bat('tibcli.exe login -u $USERNAME -p $PASSWORD')
                         }
+				}
+				steps {
+				    bat('tibcli -h')
 				}
 		}
         stage('Test') {
