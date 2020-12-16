@@ -76,9 +76,9 @@ pipeline {
 
                   bat('mkdir ' + appName)	
 
-                  echo 'copy ' + './cicdbuild'+ buildAppName+ '/'+earName + ' ./'+appName+'/'+earName
+                  echo 'copy ' + './cicdbuild/'+ buildAppName+ '/'+earName + ' ./'+appName+'/'+earName
 				  
-                  bat('copy ' + './cicdbuild'+ buildAppName+ '/'+earName + ' ./'+appName+'/'+earName)
+                  bat('copy ' + './cicdbuild/'+ buildAppName+ '/'+earName + ' ./'+appName+'/'+earName)
 				  
 				}
 		}
