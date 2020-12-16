@@ -36,16 +36,19 @@ pipeline {
 		   steps {
 		   
 				  echo '## checkout ear ##'
+				  
 				  script {
 					    Boolean bool = fileExists 'cicdbuild'
-						bat('rmdir /Q /S cicdbuild')
+						if(bool){
+							bat('rmdir /Q /S cicdbuild')
+						}else{
+							bat('mkdir cicdbuild')
+						}
 				   }
-				  
-				  bat('mkdir cicdbuild')
-				  
-                  dir('cicdbuild'){
-					git url: buildGitUrl, branch: gitBranch, credentialsId: 'git'
-                  }
+				   
+                   dir('cicdbuild'){
+					    git url: buildGitUrl, branch: gitBranch, credentialsId: 'git'
+                   }
 				  
 				  echo '## Ear downloaded ##'
 				  
@@ -53,10 +56,12 @@ pipeline {
 				 
 				  script {
 						Boolean bool = fileExists 'cicdgvconfig'
-						bat('rmdir /Q /S cicdgvconfig')
+						if(bool){
+							bat('rmdir /Q /S cicdgvconfig')
+						}else{
+							bat('mkdir cicdgvconfig')
+						}
 				  }
-				  
-				  bat('mkdir cicdgvconfig')
 				  
 				  dir('cicdgvconfig'){ 
 				    git url: gvConfigUrl, branch: gitBranch, credentialsId: 'git'	
@@ -73,7 +78,7 @@ pipeline {
 
                   echo 'copy ' + './cicdbuild'+ buildAppName+ '/'+earName + ' ./'+appName+'/'+earName
 				  
-                //  bat('copy ' + './'+ buildAppName+ '/'+earName + ' ./'+appName+'/'+earName)
+                  bat('copy ' + './cicdbuild'+ buildAppName+ '/'+earName + ' ./'+appName+'/'+earName)
 				  
 				}
 		}
