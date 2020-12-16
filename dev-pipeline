@@ -21,6 +21,8 @@ pipeline {
                 echo 'Building..'
 				
 				bat('tibcli -h')
+				
+				echo "PATH=$PATH"
             }
         }
 		
