@@ -95,25 +95,23 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
-				withCredentials([usernamePassword(credentialsId: 'tibcotci',usernameVariable: 'username',passwordVariable: 'password')])
-                {
-                             echo "USERNAME" + username + "PASSWORD" + password
-							
-							 bat('tibcli.exe login -u '+ username+ ' -p ' + password)
-							 
-							 echo 'Applications currently deployed in TIBCO TCI Domain'
-							 
-							 //bat('cd '+ appName)
-							 
-							 dir(appName){
-							 
-									bat('tibcli app list')
-							 }
-							 
-							 bat('tibcli app push')
-							 
-							 bat('tibcli.exe logout')
-                }
+				dir(appName){
+					withCredentials([usernamePassword(credentialsId: 'tibcotci',usernameVariable: 'username',passwordVariable: 'password')])
+					{
+								 echo "USERNAME" + username + "PASSWORD" + password
+								
+								 bat('tibcli.exe login -u '+ username+ ' -p ' + password)
+								 
+								 echo 'Applications currently deployed in TIBCO TCI Domain'
+								 
+								 //bat('cd '+ appName)
+								 bat('tibcli app list')
+								 
+								 bat('tibcli app push')
+								 
+								 bat('tibcli.exe logout')
+					}
+				}
             }
         }
     }
