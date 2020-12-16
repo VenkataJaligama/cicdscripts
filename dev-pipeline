@@ -30,7 +30,7 @@ pipeline {
 				  echo '**************** checkout ear ***************************'
 				  bat('tibcli -h')
 				  git url: earGitUrl, branch: earGitBranch, credentialsId: 'git'
-				  bat('tibcli -h')
+				//  bat('tibcli -h')
 				  echo '**************** Ear successfully downloaded ****************'
 				  echo '**************** checkout properties from git ****************'
 				  git url: propGitUrl, branch: propGitBranch, credentialsId: 'git'
