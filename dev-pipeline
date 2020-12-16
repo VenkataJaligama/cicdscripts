@@ -44,11 +44,11 @@ pipeline {
 				  echo '## checkout global variables ##'
 				  git url: gvConfigUrl, branch: gitBranch, credentialsId: 'git'		
 
-                  bat('mkdir ' + appName)	
+                //  bat('mkdir ' + appName)	
 
-                  echo 'copy ' + './'+ buildAppName+ '/'+earName + ' ./'+appName+'/'+earName
+               //   echo 'copy ' + './'+ buildAppName+ '/'+earName + ' ./'+appName+'/'+earName
 				  
-                  bat('copy ' + './'+ buildAppName+ '/'+earName + ' ./'+appName+'/'+earName)
+                //  bat('copy ' + './'+ buildAppName+ '/'+earName + ' ./'+appName+'/'+earName)
 				  
 				}
 		}
