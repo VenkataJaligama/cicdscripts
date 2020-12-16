@@ -29,11 +29,11 @@ pipeline {
 		          bat('tibcli -h')
 				  echo '**************** checkout ear ***************************'
 				  bat('tibcli -h')
-				  git url: earGitUrl, branch: earGitBranch, credentialsId: 'git'
+		//		  git url: earGitUrl, branch: earGitBranch, credentialsId: 'git'
 				//  bat('tibcli -h')
 				  echo '**************** Ear successfully downloaded ****************'
 				  echo '**************** checkout properties from git ****************'
-				  git url: propGitUrl, branch: propGitBranch, credentialsId: 'git'
+		//		  git url: propGitUrl, branch: propGitBranch, credentialsId: 'git'
                   
 
 				  withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'TIBCO_TCI_CREDENTIALS', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']])
@@ -47,7 +47,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing..'
-				//bat('tibcli -h')
+				bat('tibcli -h')
             }
         }
         stage('Deploy') {
