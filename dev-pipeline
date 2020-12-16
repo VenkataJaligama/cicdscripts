@@ -105,7 +105,9 @@ pipeline {
 							 
 							 bat('cd '+ appName)
 							 
-							 bat('tibcli app list')
+							 dir(appName){ 
+									bat('tibcli app list')
+							 }
 							 
 							 bat('tibcli app push')
 							 
