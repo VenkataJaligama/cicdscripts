@@ -103,9 +103,10 @@ pipeline {
 							 
 							 echo 'Applications currently deployed in TIBCO TCI Domain'
 							 
-							 bat('cd '+ appName)
+							 //bat('cd '+ appName)
 							 
-							 dir(appName){ 
+							 dir(appName){
+							 
 									bat('tibcli app list')
 							 }
 							 
