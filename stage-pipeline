@@ -59,7 +59,7 @@ pipeline {
 
 				  echo ' coping manifest file '
 				  
-				  //bat('copy ' + 'cicdgvconfig\\'+ gvConfigAppName+ '\\'+devManifestName + '  '+appName+'\\'+stageAppProp)
+				  bat('copy ' + 'cicdgvconfig\\'+ gvConfigAppName+ '\\'+stageAppProp + '  '+appName+'\\'+stageAppProp)
 				}
 		}
         stage('Test') {
@@ -81,8 +81,10 @@ pipeline {
 								 
 								 bat('tibcli org current')
 								
-								 bat('tibcli app copy '+ devAppName+ '  '+ appName	+'.staging  --impose')						
-								 								 
+								 bat('tibcli app copy '+ devAppName+ '  '+ appName	+'.staging  --impose')	
+								 
+								 bat('tibcli app configure -p '+ stageAppProp + ' ' + appName +'.staging' --impose')
+							 			 
 								 bat('tibcli.exe logout')
 					}
 				}
