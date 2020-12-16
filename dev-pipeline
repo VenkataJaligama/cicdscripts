@@ -1,62 +1,69 @@
 pipeline {
 
-    agent any
+     agent any
 	
 	 environment {
-	    earGitUrl= "${APP_EAR_GIT_URL}"
-		earGitBranch= "master"
-   
-        propGitUrl= "${APP_PROP_GIT_URL}"
-		propGitBranch= "master"
+	 
+	    appName    = "${APP_NAME}"            //name used for deployed app name in TIBCO TCI
 		
-		appPropName="${APP_PROP_NAME}"
+	    buildGitUrl= "${APP_BUILD_GIT_URL}"   //GIT URL (base) where build artifacts are stored
 		
+		buildAppName="${APP_BUILD_NAME}"      // Name of the application name in the Build folder
+		
+		earName="${APP_BUILD_EAR_NAME}"       //Ear name with version
+		
+		gvConfigUrl= "${APP_CONFIG_GIT_URL}"  //Global Variable config files base URL
+		
+		gvConfigAppName="${APP_CONFIG_NAME}"
+		
+		gitBranch= "master"
+      
 		manifestName = "manifest_dev.json"
+
+        buildParams = "build_params.txt"
+		
+		earGitUrl= buildGitUrl + "/" + buildAppName+"/"+earName
+		
+		gvConfig = gvConfigUrl+ "/" + gvConfigAppName
 	}
 	
     stages {
 	
         stage('Build') {
             steps {
-                echo 'Building..'
-				
-				bat('tibcli -h')
-				
-				echo "PATH=$PATH"
+                echo 'Building........... (No Build in this CICD release)'
             }
         }
 		
 		stage('artifacts'){
 		   steps {
-		          bat('tibcli -h')
-				  echo '**************** checkout ear ***************************'
-				  bat('tibcli -h')
-				  git url: earGitUrl, branch: earGitBranch, credentialsId: 'git'
-				  bat('tibcli -h')
-				  echo '**************** Ear successfully downloaded ****************'
-				  echo '**************** checkout properties from git ****************'
-				  git url: propGitUrl, branch: propGitBranch, credentialsId: 'git'
-                  
-				  
-				  
+		   
+				  echo '## checkout ear ##'
 
-				  withCredentials([usernamePassword(credentialsId: 'tibcotci',usernameVariable: 'username',passwordVariable: 'password')])
-                        {
-                             echo "USERNAME" + username + "PASSWORD" + password
-							
-							 bat('tibcli.exe login -u '+ username+ ' -p ' + password)
-                        }
+				  git url: earGitUrl, branch: gitBranch, credentialsId: 'git'
+
+				  echo '## Ear downloaded ##'
+				  
+				  echo '## checkout global variables ##'
+				  git url: gvConfig, branch: gitBranch, credentialsId: 'git'				  
 				}
 		}
         stage('Test') {
             steps {
-                echo 'Testing..'
-				bat('tibcli -h')
+                echo 'In this release No test execution task is implemented..'
             }
         }
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
+				withCredentials([usernamePassword(credentialsId: 'tibcotci',usernameVariable: 'username',passwordVariable: 'password')])
+                {
+                             echo "USERNAME" + username + "PASSWORD" + password
+							
+							 bat('tibcli.exe login -u '+ username+ ' -p ' + password)
+							 
+							 bat('tibcli.exe logout')
+                }
             }
         }
     }
