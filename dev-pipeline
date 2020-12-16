@@ -41,13 +41,11 @@ pipeline {
 							// bat('tibcli.exe login -u $USERNAME -p $PASSWORD')
                         }
 				}
-				steps {
-				    bat('tibcli -h')
-				}
 		}
         stage('Test') {
             steps {
                 echo 'Testing..'
+				bat('tibcli -h')
             }
         }
         stage('Deploy') {
