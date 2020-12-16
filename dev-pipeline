@@ -36,8 +36,9 @@ pipeline {
 		   steps {
 		   
 				  echo '## checkout ear ##'
-				  
-				  def exists = fileExists 'cicdbuild'
+				  script {
+					Boolean bool = fileExists 'cicdbuild'
+					}
 				  
 				 // if(fileExists('cicdbuild')){
 				//	bat('rmdir /Q /S cicdbuild')
