@@ -95,7 +95,7 @@ pipeline {
 								         echo 'Exception occurred: ' + e.toString()
 										 
 										 if( e.toString().contains('not found')){
-											echo '### application not exists for replace###')
+											echo '### application not exists for replace###'
 										 }
 									}
 								 }
