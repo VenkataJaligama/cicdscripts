@@ -81,7 +81,14 @@ pipeline {
 								 
 								 bat('tibcli org current')
 								 
-								 bat('tibcli app delete '+ appName +'.staging --force')
+								
+								 script {
+									 try{
+											bat('tibcli app delete '+ appName +'.staging --force')
+									    }catch(Exception e){
+											echo '***** Exception occurred: ' + e.toString()
+										}
+								}
 								
 								 	
 								 
