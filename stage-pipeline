@@ -101,6 +101,12 @@ pipeline {
 									   bat('tibcli app copy '+ devAppName+ '  '+ appName	+'.staging  --impose')
 									   bat('tibcli app configure ' + appName +'.staging' + ' -p '+ stageAppProp + ' -f')
 									   bat('tibcli app replace ' + appName +'.staging' +  ' ' +appName + ' --impose')
+									   
+									   try{
+											bat('tibcli app delete '+ appName +'.staging --force')
+									    }catch(Exception e){
+											echo '***** Exception occurred: ' + e.toString()
+										}
 									}catch(Exception e){
 										bat('tibcli app copy '+ devAppName+ '  '+ appName	+' --impose')
 										bat('tibcli app configure ' + appName + ' -p '+ stageAppProp + ' -f')
