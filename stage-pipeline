@@ -87,7 +87,16 @@ pipeline {
 								 
 								 bat('tibcli app configure ' + appName +'.staging' + ' -p '+ stageAppProp + ' -f')
 								 
-								 bat('tibcli app replace ' + appName +'.staging' +  ' ' +appName + ' --impose')
+								 script {
+								 
+								    try{
+										bat('tibcli app replace ' + appName +'.staging' +  ' ' +appName + ' --impose')
+									}catch(Exception e){
+								         echo 'Exception occurred: ' + e.toString()
+									}
+								 }
+								 
+								 
 								 
 								 bat('tibcli.exe logout')
 					}
