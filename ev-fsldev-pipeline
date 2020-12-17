@@ -75,7 +75,7 @@ pipeline {
             steps {
                 echo 'Deploying....'
 				dir(appName){
-					withCredentials([usernamePassword(credentialsId: 'tibcotci',usernameVariable: 'username',passwordVariable: 'password')])
+					withCredentials([usernamePassword(credentialsId: 'ev_tibcotci',usernameVariable: 'username',passwordVariable: 'password')])
 					{
 								 echo "USERNAME" + username + "PASSWORD" + password
 								
