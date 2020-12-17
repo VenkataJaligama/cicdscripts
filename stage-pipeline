@@ -90,8 +90,6 @@ pipeline {
 										}
 								}
 								
-								 	
-								 
 								 //check the app is already exists? If not exists create copy app from dev and update properties
 								 // if exists create a staging app update properties and then replace with new.
 								 
