@@ -1,0 +1,97 @@
+pipeline {
+
+     agent any
+	
+	 environment {
+	 
+	    appName    = "${APP_NAME}"            //name used for deployed app name in TIBCO TCI
+		
+		gvConfigUrl= "${APP_CONFIG_GIT_URL}"  //Global Variable config files base URL
+		
+		gvConfigAppName="${APP_CONFIG_NAME}"
+		
+		gitBranch= "master"
+      
+		stageAppProp = "app_stage_refresh.properties"
+		
+		stageOrgName = "FSLDev"
+		
+	}
+	
+    stages {
+	
+        stage('Build') {
+            steps {
+                echo '## No Build is Required ##'
+            }
+        }
+		
+		stage('artifacts'){
+		   steps {
+		   
+				  echo '## checkout global variables ##'
+				 
+				  script {
+						Boolean bool = fileExists 'cicdgvconfig'
+						if(bool){
+							bat('rmdir /Q /S cicdgvconfig')
+						}else{
+							bat('mkdir cicdgvconfig')
+						}
+				  }
+				  
+				  dir('cicdgvconfig'){ 
+				    git url: gvConfigUrl, branch: gitBranch, credentialsId: 'git'	
+				  }					
+				  
+				  script {
+						Boolean bool = fileExists appName
+						if(bool){
+						   bat('rmdir /Q /S '+ appName)
+						}
+				  }
+
+                  bat('mkdir ' + appName)	
+
+				  echo ' coping manifest file '
+				  
+				  bat('copy ' + 'cicdgvconfig\\'+ gvConfigAppName+ '\\'+stageAppProp + '  '+appName+'\\'+stageAppProp)
+				}
+		}
+        stage('Test') {
+            steps {
+                echo '## No Testing is required ##'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying....'
+				dir(appName){
+					withCredentials([usernamePassword(credentialsId: 'tibcotci',usernameVariable: 'username',passwordVariable: 'password')])
+					{
+								 echo "USERNAME" + username + "PASSWORD" + password
+								
+								 bat('tibcli.exe login -u '+ username+ ' -p ' + password)    //login to stage
+								 
+								 echo ' ## Logged in to org' 
+								 
+								 bat('tibcli org current')
+								 
+								 
+								 script {
+									try{
+									  
+									   bat('tibcli app status ' + appName)
+									   bat('tibcli app configure ' + appName + ' -p '+ stageAppProp + ' -f')
+									   
+									}catch(Exception e){
+										echo '***** Exception occurred: ' + e.toString()
+									}
+								 }
+								 bat('tibcli.exe logout')
+					}
+				}
+            }
+        }
+    }
+}
