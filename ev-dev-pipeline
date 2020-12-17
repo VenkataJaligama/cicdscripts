@@ -28,7 +28,7 @@ pipeline {
 		
 		devOrgName="EagleView Dev"
 		
-		devRegion ="us-west-2
+		devRegion ="us-west-2"
 		
 	}
 	
