@@ -93,6 +93,10 @@ pipeline {
 										bat('tibcli app replace ' + appName +'.staging' +  ' ' +appName + ' --impose')
 									}catch(Exception e){
 								         echo 'Exception occurred: ' + e.toString()
+										 
+										 if( e.toString().contains('not found')){
+											echo '### application not exists for replace###')
+										 }
 									}
 								 }
 								 
