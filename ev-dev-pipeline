@@ -1,0 +1,126 @@
+pipeline {
+
+     agent any
+	
+	 environment {
+	 
+	    appName    = "${APP_NAME}"            //name used for deployed app name in TIBCO TCI
+		
+	    buildGitUrl= "${APP_BUILD_GIT_URL}"   //GIT URL (base) where build artifacts are stored
+		
+		buildAppName="${APP_BUILD_NAME}"      // Name of the application name in the Build folder
+		
+		earName="${APP_BUILD_EAR_NAME}"       //Ear name with version
+		
+		gvConfigUrl= "${APP_CONFIG_GIT_URL}"  //Global Variable config files base URL
+		
+		gvConfigAppName="${APP_CONFIG_NAME}"
+		
+		gitBranch= "master"
+      
+		devManifestName = "manifest_dev.json"
+		
+        manifestName = "manifest.json"
+		
+        buildParams = "build_params.txt"
+		
+		appScaleCount= "${APP_SCALE_COUNT}"
+		
+		devOrgName="EagleView Dev"
+		
+	}
+	
+    stages {
+	
+        stage('Build') {
+            steps {
+                echo 'Building........... (No Build in this CICD release)'
+            }
+        }
+		
+		stage('artifacts'){
+		   steps {
+		   
+				  echo '## checkout ear ##'
+				  
+				  script {
+					    Boolean bool = fileExists 'cicdbuild'
+						if(bool){
+							bat('rmdir /Q /S cicdbuild')
+						}else{
+							bat('mkdir cicdbuild')
+						}
+				   }
+				   
+                   dir('cicdbuild'){
+					    git url: buildGitUrl, branch: gitBranch, credentialsId: 'git'
+                   }
+				  
+				  echo '## Ear downloaded ##'
+				  
+				  echo '## checkout global variables ##'
+				 
+				  script {
+						Boolean bool = fileExists 'cicdgvconfig'
+						if(bool){
+							bat('rmdir /Q /S cicdgvconfig')
+						}else{
+							bat('mkdir cicdgvconfig')
+						}
+				  }
+				  
+				  dir('cicdgvconfig'){ 
+				    git url: gvConfigUrl, branch: gitBranch, credentialsId: 'git'	
+				  }					
+				  
+				  script {
+						Boolean bool = fileExists appName
+						if(bool){
+						   bat('rmdir /Q /S '+ appName)
+						}
+				  }
+
+                  bat('mkdir ' + appName)	
+
+                  echo  'coping ear file command '+  'copy ' + 'cicdbuild\\'+ buildAppName+ '\\'+earName + "  " + appName+'\\'+earName
+				  
+                  bat('copy ' + 'cicdbuild\\'+ buildAppName+ '\\'+earName + '  '+appName+'\\'+earName)
+				  
+				  echo ' coping manifest file '
+				  
+				  bat('copy ' + 'cicdgvconfig\\'+ gvConfigAppName+ '\\'+devManifestName + '  '+appName+'\\'+manifestName)
+				}
+		}
+        stage('Test') {
+            steps {
+                echo 'In this release No test execution task is implemented..'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying....'
+				dir(appName){
+					withCredentials([usernamePassword(credentialsId: 'tibcotci',usernameVariable: 'username',passwordVariable: 'password')])
+					{
+								 echo "USERNAME" + username + "PASSWORD" + password
+								
+								 bat('tibcli.exe login -u '+ username+ ' -p ' + password +' --org '+devOrgName)
+								 
+								 echo ' Logged in to org' 
+								 
+								 bat('tibcli org current')
+								 
+								 echo 'Applications currently deployed in TIBCO TCI Domain'
+								 
+								 //bat('cd '+ appName)
+								 bat('tibcli app list')
+								 
+								 bat('tibcli app push ' + appScaleCount + ' ' + appName + ' --impose')   
+								 
+								 bat('tibcli.exe logout')
+					}
+				}
+            }
+        }
+    }
+}
