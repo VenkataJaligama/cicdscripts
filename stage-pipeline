@@ -83,25 +83,24 @@ pipeline {
 								 
 								 bat('tibcli app delete '+ appName +'.staging --force')
 								
-								 bat('tibcli app copy '+ devAppName+ '  '+ appName	+'.staging  --impose')	
+								 	
 								 
-								 bat('tibcli app configure ' + appName +'.staging' + ' -p '+ stageAppProp + ' -f')
+								 //check the app is already exists? If not exists create copy app from dev and update properties
+								 // if exists create a staging app update properties and then replace with new.
 								 
 								 script {
-								 
-								    try{
-										bat('tibcli app replace ' + appName +'.staging' +  ' ' +appName + ' --impose')
+									try{
+									  
+									   bat('tibcli app status ' + appName)
+									   echo '## Application exists, so creating staging app and updating props then replace with exists one##'
+									   bat('tibcli app copy '+ devAppName+ '  '+ appName	+'.staging  --impose')
+									   bat('tibcli app configure ' + appName +'.staging' + ' -p '+ stageAppProp + ' -f')
+									   bat('tibcli app replace ' + appName +'.staging' +  ' ' +appName + ' --impose')
 									}catch(Exception e){
-								         echo 'Exception occurred: ' + e.toString()
-										 
-										 if( e.toString().contains('not found')){
-											echo '### application not exists for replace###'
-										 }
+										bat('tibcli app copy '+ devAppName+ '  '+ appName	+' --impose')
+										bat('tibcli app configure ' + appName + ' -p '+ stageAppProp + ' -f')
 									}
 								 }
-								 
-								 
-								 
 								 bat('tibcli.exe logout')
 					}
 				}
