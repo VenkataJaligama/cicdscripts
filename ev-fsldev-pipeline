@@ -1,7 +1,6 @@
 pipeline {
 
      agent any
-	
 	 environment {
 	 
 	    appName    = "${APP_NAME}"            //name used for deployed app name in TIBCO TCI
@@ -18,20 +17,18 @@ pipeline {
 		isStageAppExists=false
 	}
 	
-    stages {
-	
-        stage('Build') {
-            steps {
-                echo 'Building........... (No Build in this CICD release)'
-            }
-        }
+	 stages {
+	      
+		  stage('Build') {
+				steps {
+					echo 'Building........... (No Build in this CICD release)'
+				}
+		    }
 		
-		stage('artifacts'){
-		   steps {
-		   
-				  echo '## checkout global variables ##'
-				 
-				  script {
+          stage('artifacts'){
+		     steps {
+                 echo '## checkout global variables ##'
+				 script {
 						Boolean bool = fileExists 'cicdgvconfig'
 						if(bool){
 							bat('rmdir /Q /S cicdgvconfig')
@@ -40,99 +37,89 @@ pipeline {
 						}
 				  }
 				  
-				  dir('cicdgvconfig'){ 
+				 dir('cicdgvconfig'){ 
 				    git url: gvConfigUrl, branch: gitBranch, credentialsId: 'git'	
-				  }					
-				  
-				  script {
+				 }
+				 script {
 						Boolean bool = fileExists appName
 						if(bool){
 						   bat('rmdir /Q /S '+ appName)
 						}
-				  }
-
-                  bat('mkdir ' + appName)	
-
-				  echo ' coping manifest file '
-				  
-				  bat('copy ' + 'cicdgvconfig\\'+ gvConfigAppName+ '\\'+stageAppProp + '  '+appName+'\\'+stageAppProp)
-				}
-		}
-        stage('Test') {
-            steps {
-                echo 'In this release No test execution task is implemented..'
-            }
-        }
-        stage('Deploy-Staging') {
-		
-            steps {
-                echo 'Staging application....'
-				
-				//checking if app already in stage
-				withCredentials([usernamePassword(credentialsId: 'ev_tibcotci',usernameVariable: 'username',passwordVariable: 'password')])
-				{
-					 bat('tibcli.exe login -u '+ username+ ' -p ' + password + ' --org '+targetOrg + ' --region ' + targetRegion)
-					 script {
-							try{
-								bat('tibcli app status ' + appName)
-								isStageAppExists=true
-							}catch(Exception e){
-								isStageAppExists=false    //first time deploying
-							}
-					 }
-					 bat('tibcli.exe logout')		//log of from stage
-				}
-				
-				dir(appName){
+				 }		
+                 bat('mkdir ' + appName)	
+				 echo ' coping manifest file ' 
+				 bat('copy ' + 'cicdgvconfig\\'+ gvConfigAppName+ '\\'+stageAppProp + '  '+appName+'\\'+stageAppProp)
+            }				 
+		  }
+		   stage('Test') {
+                steps {
+                    echo 'In this release No test execution task is implemented..'
+                }
+           }
+		   
+		   stage('Deploy-Staging') {
+		         steps {
+					echo 'Staging application....'
+					//checking if app already in stage
 					withCredentials([usernamePassword(credentialsId: 'ev_tibcotci',usernameVariable: 'username',passwordVariable: 'password')])
 					{
-								 echo "USERNAME" + username + "PASSWORD" + password
-								 //login to lower env
-								 bat('tibcli.exe login -u '+ username+ ' -p ' + password + ' --org '+devOrgName + ' --region ' + devRegion)     //login to dev to copy to stage
-								 echo ' ## Logged in to org' 
-								 
-								 bat('tibcli org current')
-								 
-								 script {
-									try{
-									  
-									  if(isStageAppExists){
+						bat('tibcli.exe login -u '+ username+ ' -p ' + password + ' --org '+targetOrg + ' --region ' + targetRegion)
+						script {
+								try{
+									bat('tibcli app status ' + appName)
+									isStageAppExists=true
+								}catch(Exception e){
+									isStageAppExists=false    //first time deploying
+								}
+						}
+						bat('tibcli.exe logout')		//log of from stage
+					}
+					
+					dir(appName){   //login to dev to copy to stage
+					   withCredentials([usernamePassword(credentialsId: 'ev_tibcotci',usernameVariable: 'username',passwordVariable: 'password')])
+					   {
+							 bat('tibcli.exe login -u '+ username+ ' -p ' + password + ' --org '+devOrgName + ' --region ' + devRegion)     
+							 //login to dev to copy to stage
+							 echo ' ## Logged in to org' 
+							 bat('tibcli org current') 
+							 script {
+								try{
+									if(isStageAppExists){
 										bat('tibcli app copy '+ devAppName+ '  '+ appName	+'.staging  --targetOrg ' + targetOrg + ' --impose')
-										
-									  }else{
+									}else{
 									     bat('tibcli app copy '+ devAppName+ '  '+ appName	+' --targetOrg ' + targetOrg + ' --impose')
-									  }
-									   
-									}catch(Exception e){
+									}
+								}catch(Exception e){
 										echo '***** Exception occurred: ' + e.toString()
 										bat('tibcli.exe logout') //logout from Dev and login to stage.
-									}
-								 }
-								 bat('tibcli.exe logout')
-					    }
-				    }
-                }
-            }
-		}
-		stage('Deploy') {
-            steps {
-                echo 'deploying application....'
-				dir(appName){
-					withCredentials([usernamePassword(credentialsId: 'ev_tibcotci',usernameVariable: 'username',passwordVariable: 'password')])
-					{								
-						bat('tibcli.exe login -u '+ username+ ' -p ' + password + ' --org '+targetOrg + ' --region ' + targetRegion)
-						bat('tibcli org current')
-								 
-						if(isStageAppExists){
-							bat('tibcli app configure ' + appName +'.staging' + ' -p '+ stageAppProp + ' -f')
-							bat('tibcli app replace ' + appName +'.staging' +  ' ' +appName + ' --impose')
-						}else{
-							bat('tibcli app configure ' + appName + ' -p '+ stageAppProp + ' -f')
+								}
+								bat('tibcli.exe logout')
+							 }							 
 						}
-						bat('tibcli.exe logout')
 					}
-				}
-			}
-		}
-    }
+				 }
+		   }
+	 
+	       stage('Deploy') {
+		       steps {
+			        echo 'deploying application....'
+					dir(appName){
+					   withCredentials([usernamePassword(credentialsId: 'ev_tibcotci',usernameVariable: 'username',passwordVariable: 'password')])
+						{								
+							bat('tibcli.exe login -u '+ username+ ' -p ' + password + ' --org '+targetOrg + ' --region ' + targetRegion)
+							bat('tibcli org current')
+									 
+							if(isStageAppExists){
+								bat('tibcli app configure ' + appName +'.staging' + ' -p '+ stageAppProp + ' -f')
+								bat('tibcli app replace ' + appName +'.staging' +  ' ' +appName + ' --impose')
+							}else{
+								bat('tibcli app configure ' + appName + ' -p '+ stageAppProp + ' -f')
+							}
+							bat('tibcli.exe logout')
+						}
+					}
+			   }
+		   }
+	 }
+    
 }
