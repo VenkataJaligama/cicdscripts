@@ -82,19 +82,20 @@ pipeline {
 							 //login to dev to copy to stage
 							 echo ' ## Logged in to org' 
 							 bat('tibcli org current') 
-							 try{
-								 script {
+							 script {
+							    try{
 									if(isStageAppExists){
 										bat('tibcli app copy '+ devAppName+ '  '+ appName	+'.staging  --targetOrg ' + targetOrg + ' --impose')
 									}else{
 									     bat('tibcli app copy '+ devAppName+ '  '+ appName	+' --targetOrg ' + targetOrg + ' --impose')
 									}
-									}
+								
 								}catch(Exception e){
 										echo '***** Exception occurred: ' + e.toString()
 										bat('tibcli.exe logout') //logout from Dev and login to stage.
 								}
 								bat('tibcli.exe logout')
+							}
 						}
 					}
 				 }
@@ -108,13 +109,14 @@ pipeline {
 						{								
 							bat('tibcli.exe login -u '+ username+ ' -p ' + password + ' --org '+targetOrg + ' --region ' + targetRegion)
 							bat('tibcli org current')
-									 
-							if(isStageAppExists){
-								bat('tibcli app configure ' + appName +'.staging' + ' -p '+ stageAppProp + ' -f')
-								bat('tibcli app replace ' + appName +'.staging' +  ' ' +appName + ' --impose')
-							}else{
-								bat('tibcli app configure ' + appName + ' -p '+ stageAppProp + ' -f')
-							}
+							 script {		 
+									if(isStageAppExists){
+										bat('tibcli app configure ' + appName +'.staging' + ' -p '+ stageAppProp + ' -f')
+										bat('tibcli app replace ' + appName +'.staging' +  ' ' +appName + ' --impose')
+									}else{
+										bat('tibcli app configure ' + appName + ' -p '+ stageAppProp + ' -f')
+									}
+							 }
 							bat('tibcli.exe logout')
 						}
 					}
