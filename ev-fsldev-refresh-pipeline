@@ -65,7 +65,7 @@ pipeline {
 					{
 						bat('tibcli.exe login -u '+ username+ ' -p ' + password + ' --org '+targetOrg + ' --region ' + targetRegion)    
 						                                                                          //login to stage
-						echo ' ## Logged in to org' 
+						echo ' ## Logged into org' 
 						bat('tibcli org current')
 						script {
 								try{
