@@ -12,7 +12,7 @@ pipeline {
 		devAppName = "${APP_DEV_NAME}"
 		devOrgName = '\"EagleView Dev\"'
 		devRegion ="us-west-2"
-		targetOrg = '\"EagleView FSL_Dev\"'
+		targetOrg = '\"EagleView FSL_Dev\"'   //env where you want to deploy code
 		targetRegion="us-west-2"
 		Boolean isStageAppExists=false
 	}
