@@ -14,7 +14,7 @@ pipeline {
 		devRegion ="us-west-2"
 		targetOrg = '\"EagleView FSL_Dev\"'
 		targetRegion="us-west-2"
-		isStageAppExists=false
+		Boolean isStageAppExists=false
 	}
 	
 	 stages {
