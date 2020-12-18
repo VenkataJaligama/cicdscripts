@@ -113,6 +113,12 @@ pipeline {
 									if(isStageAppExists){
 										bat('tibcli app configure ' + appName +'.staging' + ' -p '+ stageAppProp + ' -f')
 										bat('tibcli app replace ' + appName +'.staging' +  ' ' +appName + ' --impose')
+										
+										try{
+											bat('tibcli app delete '+ appName +'.staging --force')
+									    }catch(Exception e){
+											echo '***** Exception occurred: ' + e.toString()
+										}
 									}else{
 										bat('tibcli app configure ' + appName + ' -p '+ stageAppProp + ' -f')
 										
