@@ -24,6 +24,10 @@ pipeline {
 		
 		targetOrg = '\"EagleView FSL_Dev\"'
 		
+		targetRegion="us-west-2"
+		
+		isStageAppExists=false
+		
 	}
 	
     stages {
@@ -71,48 +75,48 @@ pipeline {
                 echo 'In this release No test execution task is implemented..'
             }
         }
-        stage('Deploy') {
+        stage('Deploy-Staging') {
+		
             steps {
-                echo 'Deploying....'
+                echo 'Staging application....'
+				
+				//checking if app already in stage
+				withCredentials([usernamePassword(credentialsId: 'ev_tibcotci',usernameVariable: 'username',passwordVariable: 'password')])
+				{
+					 bat('tibcli.exe login -u '+ username+ ' -p ' + password + ' --org '+targetOrg + ' --region ' + targetRegion)
+					 script {
+							try{
+								bat('tibcli app status ' + appName)
+								isStageAppExists=true
+							}catch(Exception e){
+								isStageAppExists=false    //first time deploying
+							}
+					 bat('tibcli.exe logout')		//log of from stage
+				}
+				
 				dir(appName){
 					withCredentials([usernamePassword(credentialsId: 'ev_tibcotci',usernameVariable: 'username',passwordVariable: 'password')])
 					{
 								 echo "USERNAME" + username + "PASSWORD" + password
-								
-								 bat('tibcli.exe login -u '+ username+ ' -p ' + password + ' --org '+devOrgName + ' --region ' + devRegion)    //login to dev to copy to stage
-								 
+								 //login to lower env
+								 bat('tibcli.exe login -u '+ username+ ' -p ' + password + ' --org '+devOrgName + ' --region ' + devRegion)     //login to dev to copy to stage
 								 echo ' ## Logged in to org' 
 								 
 								 bat('tibcli org current')
 								 
-								
-								// script {
-								//	 try{
-								//			bat('tibcli app delete '+ appName +'.staging --force')
-								//	    }catch(Exception e){
-								//			echo '***** Exception occurred: ' + e.toString()
-								//		}
-								//}
-								
-								 //check the app is already exists? If not exists create copy app from dev and update properties
-								 // if exists create a staging app update properties and then replace with new.
-								 
 								 script {
 									try{
 									  
-									   bat('tibcli app copy '+ devAppName+ '  '+ appName	+'.staging  --targetOrg ' + targetOrg + ' --impose')
-									   bat('tibcli app configure ' + appName +'.staging' + ' -p '+ stageAppProp + ' -f')
-									 //  bat('tibcli app replace ' + appName +'.staging' +  ' ' +appName + ' --impose')
+									  if(isStageAppExists){
+										bat('tibcli app copy '+ devAppName+ '  '+ appName	+'.staging  --targetOrg ' + targetOrg + ' --impose')
+										
+									  }else{
+									     bat('tibcli app copy '+ devAppName+ '  '+ appName	+' --targetOrg ' + targetOrg + ' --impose')
+									  }
 									   
-									//   try{
-									//		bat('tibcli app delete '+ appName +'.staging --force')
-									//    }catch(Exception e){
-									//		echo '***** Exception occurred: ' + e.toString()
-									//	}
 									}catch(Exception e){
 										echo '***** Exception occurred: ' + e.toString()
-										//bat('tibcli app copy '+ devAppName+ '  '+ appName	+' --impose')
-										//bat('tibcli app configure ' + appName + ' -p '+ stageAppProp + ' -f')
+										bat('tibcli.exe logout') //logout from Dev and login to stage.
 									}
 								 }
 								 bat('tibcli.exe logout')
@@ -120,5 +124,26 @@ pipeline {
 				}
             }
         }
+		
+		stage('Deploy') {
+            steps {
+                echo 'deploying application....'
+				dir(appName){
+					withCredentials([usernamePassword(credentialsId: 'ev_tibcotci',usernameVariable: 'username',passwordVariable: 'password')])
+					{								
+						bat('tibcli.exe login -u '+ username+ ' -p ' + password + ' --org '+targetOrg + ' --region ' + targetRegion)
+						bat('tibcli org current')
+								 
+						if(isStageAppExists){
+							bat('tibcli app configure ' + appName +'.staging' + ' -p '+ stageAppProp + ' -f')
+							bat('tibcli app replace ' + appName +'.staging' +  ' ' +appName + ' --impose')
+						}else{
+							bat('tibcli app configure ' + appName + ' -p '+ stageAppProp + ' -f')
+						}
+						bat('tibcli.exe logout')
+					}
+				}
+			}
+		}
     }
 }
