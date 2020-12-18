@@ -5,29 +5,17 @@ pipeline {
 	 environment {
 	 
 	    appName    = "${APP_NAME}"            //name used for deployed app name in TIBCO TCI
-		
 		gvConfigUrl= "${APP_CONFIG_GIT_URL}"  //Global Variable config files base URL
-		
 		gvConfigAppName="${APP_CONFIG_NAME}"
-		
 		gitBranch= "master"
-      
 		stageAppProp = "app_stage.properties"
-		
 		appScaleCount= "${APP_SCALE_COUNT}"
-		
 		devAppName = "${APP_DEV_NAME}"
-		
 		devOrgName = '\"EagleView Dev\"'
-		
 		devRegion ="us-west-2"
-		
 		targetOrg = '\"EagleView FSL_Dev\"'
-		
 		targetRegion="us-west-2"
-		
 		isStageAppExists=false
-		
 	}
 	
     stages {
@@ -91,6 +79,7 @@ pipeline {
 							}catch(Exception e){
 								isStageAppExists=false    //first time deploying
 							}
+					 }
 					 bat('tibcli.exe logout')		//log of from stage
 				}
 				
@@ -120,11 +109,11 @@ pipeline {
 									}
 								 }
 								 bat('tibcli.exe logout')
-					}
-				}
+					    }
+				    }
+                }
             }
-        }
-		
+		}
 		stage('Deploy') {
             steps {
                 echo 'deploying application....'
