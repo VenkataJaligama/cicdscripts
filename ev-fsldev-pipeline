@@ -82,19 +82,19 @@ pipeline {
 							 //login to dev to copy to stage
 							 echo ' ## Logged in to org' 
 							 bat('tibcli org current') 
-							 script {
-								try{
+							 try{
+								 script {
 									if(isStageAppExists){
 										bat('tibcli app copy '+ devAppName+ '  '+ appName	+'.staging  --targetOrg ' + targetOrg + ' --impose')
 									}else{
 									     bat('tibcli app copy '+ devAppName+ '  '+ appName	+' --targetOrg ' + targetOrg + ' --impose')
+									}
 									}
 								}catch(Exception e){
 										echo '***** Exception occurred: ' + e.toString()
 										bat('tibcli.exe logout') //logout from Dev and login to stage.
 								}
 								bat('tibcli.exe logout')
-							 }							 
 						}
 					}
 				 }
