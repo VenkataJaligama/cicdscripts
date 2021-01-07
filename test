@@ -5,14 +5,14 @@ pipeline {
         stage('Build') {
 		steps {
 		
-		  sh "ls -l"
-		  sh "chmod 755 tibcli"
-		  sh "pwd"
+		 // sh "ls -l"
+		//  sh "chmod 755 tibcli"
+		//  sh "pwd"
 		  echo "## Executing tibcli pipeline"
 			
 		  // bat("${env.WORKSPACE}/tibcli -h")
 		   
-		//   bat("tibcli login -u vjaligama@sageitinc.com -p Girijv@1234")
+		   bat("tibcli login -u vjaligama@sageitinc.com -p Girijv@1234")
 		   
 		   
 		  // bat('tibcli.exe logout')
