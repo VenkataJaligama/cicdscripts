@@ -15,7 +15,7 @@ pipeline {
 		   bat("tibcli login -u vjaligama@sageitinc.com -p Girijv@1234 --org \"EagleView Dev\" --region us-west-2")
 		   
 		   
-		  // bat('tibcli.exe logout')
+		   bat('tibcli.exe logout')
 		   
 		}
 	}
